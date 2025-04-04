@@ -1,0 +1,25 @@
+Table,Field Name,Data Type,Is Primary Key,Is Foreign Key,References Table,References Field
+PackageManager,id,BIGINT,TRUE,FALSE,,
+PackageManager,name,VARCHAR(100),FALSE,FALSE,,
+PackageManager,created_at,TIMESTAMP,FALSE,FALSE,,
+PackageManager,updated_at,TIMESTAMP,FALSE,FALSE,,
+
+License,id,BIGINT,TRUE,FALSE,,
+License,name,VARCHAR(100),FALSE,FALSE,,
+License,created_at,TIMESTAMP,FALSE,FALSE,,
+License,updated_at,TIMESTAMP,FALSE,FALSE,,
+
+Package,id,BIGINT,TRUE,FALSE,,
+Package,name,VARCHAR(255),FALSE,FALSE,,
+Package,version,VARCHAR(100),FALSE,FALSE,,
+Package,package_manager_id,BIGINT,FALSE,TRUE,PackageManager,id
+Package,created_at,TIMESTAMP,FALSE,FALSE,,
+Package,updated_at,TIMESTAMP,FALSE,FALSE,,
+
+PackageMetadata,id,BIGINT,TRUE,FALSE,,
+PackageMetadata,package_id,BIGINT,FALSE,TRUE,Package,id
+PackageMetadata,license_id,BIGINT,FALSE,TRUE,License,id
+PackageMetadata,fetch_timestamp,TIMESTAMP,FALSE,FALSE,,
+PackageMetadata,source,VARCHAR(50),FALSE,FALSE,,
+PackageMetadata,created_at,TIMESTAMP,FALSE,FALSE,,
+PackageMetadata,updated_at,TIMESTAMP,FALSE,FALSE,,
