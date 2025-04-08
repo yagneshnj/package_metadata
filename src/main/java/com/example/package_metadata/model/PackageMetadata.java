@@ -25,10 +25,10 @@ public class PackageMetadata extends BaseEntity {
     @JoinColumn(name = "license_id", nullable = false)
     private License license;
 
+    @ManyToOne
+    @JoinColumn(name = "metadata_source_id", nullable = false)
+    private MetadataSource metadataSource;
+
     @Column(name = "fetch_timestamp", nullable = false)
     private LocalDateTime fetchTimestamp;
-
-    @Column(nullable = false)
-    private String source;
 }
-

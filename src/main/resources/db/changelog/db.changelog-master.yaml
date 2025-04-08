@@ -147,3 +147,66 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 5
+      author: you
+      changes:
+        - createTable:
+            tableName: metadata_source
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 6
+      author: you
+      changes:
+        - addColumn:
+            tableName: package_metadata
+            columns:
+              - column:
+                  name: metadata_source_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: package_metadata
+            baseColumnNames: metadata_source_id
+            referencedTableName: metadata_source
+            referencedColumnNames: id
+            constraintName: fk_metadata_source
+  - changeSet:
+      id: 7
+      author: you
+      changes:
+        - dropColumn:
+            columnName: source
+            tableName: package_metadata
+  - changeSet:
+      id: 8
+      author: you
+      changes:
+        - addUniqueConstraint:
+            tableName: package_metadata
+            columnNames: package_id, metadata_source_id
+            constraintName: uq_package_metadata_unique
