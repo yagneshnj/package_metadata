@@ -1,8 +1,19 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: you
+      author: yourname
       changes:
+        - createSequence:
+            sequenceName: package_manager_seq
+        - createSequence:
+            sequenceName: license_seq
+        - createSequence:
+            sequenceName: metadata_source_seq
+        - createSequence:
+            sequenceName: package_seq
+        - createSequence:
+            sequenceName: package_metadata_seq
+
         - createTable:
             tableName: package_manager
             columns:
@@ -12,27 +23,21 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: name
-                  type: VARCHAR(100)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: created_at
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
               - column:
                   name: updated_at
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
-  - changeSet:
-      id: 2
-      author: you
-      changes:
         - createTable:
             tableName: license
             columns:
@@ -42,115 +47,21 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-              - column:
-                  name: name
-                  type: VARCHAR(100)
-                  constraints:
                     nullable: false
-                    unique: true
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: updated_at
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 3
-      author: you
-      changes:
-        - createTable:
-            tableName: package
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
               - column:
                   name: name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:
-                  name: version
-                  type: VARCHAR(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: package_manager_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_package_manager
-                    references: package_manager(id)
-              - column:
                   name: created_at
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
               - column:
                   name: updated_at
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
-  - changeSet:
-      id: 4
-      author: you
-      changes:
-        - createTable:
-            tableName: package_metadata
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: package_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_package
-                    references: package(id)
-              - column:
-                  name: license_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_license
-                    references: license(id)
-              - column:
-                  name: fetch_timestamp
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: source
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: updated_at
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-  - changeSet:
-      id: 5
-      author: you
-      changes:
         - createTable:
             tableName: metadata_source
             columns:
@@ -160,53 +71,158 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: name
-                  type: VARCHAR(100)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: created_at
                   type: TIMESTAMP
-                  constraints:
-                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
               - column:
                   name: updated_at
                   type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: package
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: package_manager_id
+                  type: BIGINT
                   constraints:
                     nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
 
-  - changeSet:
-      id: 6
-      author: you
-      changes:
-        - addColumn:
+        - createTable:
             tableName: package_metadata
             columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: package_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: license_id
+                  type: BIGINT
               - column:
                   name: metadata_source_id
                   type: BIGINT
                   constraints:
                     nullable: false
+              - column:
+                  name: fetch_timestamp
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: package
+            baseColumnNames: package_manager_id
+            referencedTableName: package_manager
+            referencedColumnNames: id
+            constraintName: fk_package_package_manager
+
+        - addForeignKeyConstraint:
+            baseTableName: package_metadata
+            baseColumnNames: package_id
+            referencedTableName: package
+            referencedColumnNames: id
+            constraintName: fk_package_metadata_package
+
+        - addForeignKeyConstraint:
+            baseTableName: package_metadata
+            baseColumnNames: license_id
+            referencedTableName: license
+            referencedColumnNames: id
+            constraintName: fk_package_metadata_license
+
         - addForeignKeyConstraint:
             baseTableName: package_metadata
             baseColumnNames: metadata_source_id
             referencedTableName: metadata_source
             referencedColumnNames: id
-            constraintName: fk_metadata_source
+            constraintName: fk_package_metadata_source
+
+#  # --- Data Loads ---
+#  - changeSet:
+#      id: 2
+#      author: yourname
+#      changes:
+#        - loadData:
+#            file: db/data/package_manager.csv
+#            tableName: package_manager
+#            separator: ','
+#        - loadData:
+#            file: db/data/license.csv
+#            tableName: license
+#            separator: ','
+#        - loadData:
+#            file: db/data/metadata_source.csv
+#            tableName: metadata_source
+#            separator: ','
+#        - loadData:
+#            file: db/data/package.csv
+#            tableName: package
+#            separator: ','
+#        - loadData:
+#            file: db/data/package_metadata.csv
+#            tableName: package_metadata
+#            separator: ','
+
+  # --- Sequences Reset ---
   - changeSet:
-      id: 7
-      author: you
+      id: 3
+      author: yourname
       changes:
-        - dropColumn:
-            columnName: source
-            tableName: package_metadata
-  - changeSet:
-      id: 8
-      author: you
-      changes:
-        - addUniqueConstraint:
-            tableName: package_metadata
-            columnNames: package_id, metadata_source_id
-            constraintName: uq_package_metadata_unique
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: |
+              -- Sequence reset for max IDs
+              ALTER SEQUENCE package_manager_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM package_manager);
+              ALTER SEQUENCE license_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM license);
+              ALTER SEQUENCE metadata_source_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM metadata_source);
+              ALTER SEQUENCE package_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM package);
+              ALTER SEQUENCE package_metadata_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM package_metadata);
